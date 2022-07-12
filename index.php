@@ -19,7 +19,7 @@
         <header class="row">
 
             <div class="col-sm-6">
-                <a href="#">Enter Restore Mode</a>
+                <a href="#" id="restore">Enter Restore Mode</a>
             </div>
 
             <div class="col-sm-6 text-end">

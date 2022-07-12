@@ -2,11 +2,24 @@
 include('functions.php');
 $json = file_get_contents('data.json');
 $data = json_decode($json, true);
-krsort($data);
+
+if(is_array($data)) {
+    krsort($data);
+}
 
 switch($_GET['mode']){
+ //#################################################################################################################
+    case 'restore':
+        if($data['status'] == 2){
+            $data['status'] = 1;
+        }
+    break;
 //#################################################################################################################
-
+    case 'remove':
+        $id = $_GET['id'];
+        $data[$id]['status'] = 2;
+        save($data);
+    break;
 //#################################################################################################################
     case 'stop':
         $id = $_GET['id'];
@@ -27,37 +40,45 @@ switch($_GET['mode']){
 //#################################################################################################################
     case 'tally':
         $count = 0;
-
-        foreach($data as $task) {
-            $count = $count + (intval($task['date_end']) - intval($task['date_start']));
+        if(is_array($data)) {
+            foreach ($data as $task) {
+                if($task['date_end'] == ''){ $task['date_end'] = time(); }
+                if($task['status'] != 1){ continue; }
+                $count = $count + (intval($task['date_end']) - intval($task['date_start']));
+            }
+            echo time_nice($count);
         }
-        echo time_nice($count);
         break;
 //#################################################################################################################
     case 'build':
-        foreach($data as $task){?>
-            <tr>
-                <td><?= $task['name'] ?></td>
-                <td><?= date_nice($task['date_start']); ?></td>
-                <td><?php
-                    if($task['date_end'] != ''){
-                        echo date_nice($task['date_end']);
-                    }
-                    ?>
-                </td>
-                <td>
-                    <?php
-                    if($task['date_end'] == ""){
-                        echo time_nice(time()-$task['date_start']);
-                    }else{
-                        echo time_nice($task['date_end'] - $task['date_start']);
-                    }
-                    ?>
-                </td>
-                <td><button data-id="<?= $task['id']?>" class="btn btn-primary btn-stop"><?= set_icon('stop'); ?></button></td>
-                <td><button data-id="<?= $task['id']?>" class="btn btn-danger btn-delete" name="delete" id="delete"><?= set_icon('times'); ?></button></td>
-            </tr>
-        <?php }
+        if(is_array($data)){
+            foreach($data as $task){
+                if($task['status'] != 1){ continue; }
+                ?>
+
+                <tr>
+                    <td><?= $task['name'] ?></td>
+                    <td><?= date_nice($task['date_start']); ?></td>
+                    <td><?php
+                        if($task['date_end'] != ''){
+                            echo date_nice($task['date_end']);
+                        }
+                        ?>
+                    </td>
+                    <td>
+                        <?php
+                        if($task['date_end'] == ""){
+                            echo time_nice(time()-$task['date_start']);
+                        }else{
+                            echo time_nice($task['date_end'] - $task['date_start']);
+                        }
+                        ?>
+                    </td>
+                    <td><button data-id="<?= $task['id']?>" class="btn btn-primary btn-stop"><?= set_icon('stop'); ?></button></td>
+                    <td><button data-id="<?= $task['id']?>" class="btn btn-danger btn-remove"><?= set_icon('times'); ?></button></td>
+                </tr>
+            <?php }
+        }
         break;
 }
 
