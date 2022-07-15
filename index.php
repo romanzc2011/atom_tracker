@@ -11,6 +11,15 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/4380f7e432.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <style>
+        *:disabled{
+            background-color: #CCCCCC !important;
+            border: none !important;
+        }
+        .btn-col{
+            width:38px;
+        }
+    </style>
 </head>
 <body>
 <form id="form-new">
@@ -19,7 +28,7 @@
         <header class="row">
 
             <div class="col-sm-6">
-                <a href="#" id="restore">Enter Restore Mode</a>
+                <a data-mode="restore" href="#" id="btn-mode">Enter <span id="lbl-mode">Restore</span> Mode</a>
             </div>
 
             <div class="col-sm-6 text-end">
